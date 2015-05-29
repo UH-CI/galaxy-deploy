@@ -1,0 +1,45 @@
+- name: Build dependencies for mod_cas and other required modules for apache
+  yum: name={{ item }} state=present
+  with_items:
+    - openssl-devel
+    - libcurl-devel
+    - apr-devel
+    - apr-util
+    - automake
+    - pcre-devel
+    - mod_proxy_html
+    - mod_xsendfile
+- name: Build and install mod_auth_cas
+  git: repo="{{cas_repo}}" dest="{{cas_git_path}}" force=yes
+- name: autoreconf mod_auth_cas
+  command: chdir="{{cas_git_path}}" autoreconf
+- name: Configure mod_auth_cas
+  command: chdir="{{cas_git_path}}" ./configure
+- name: make mod_auth_cas
+  command: chdir="{{cas_git_path}}" make
+- name: install mod_auth_cas
+  command: chdir="{{cas_git_path}}" make install
+- name: write configuration file for mod_auth_cas redhad greater than or eq to 7
+  template: src=../templates/module.conf.j2 dest={{cas_config_path_24}}
+  when: (ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS') and ansible_lsb.major_release|int >= 7
+- name: write configuration file for mod_auth_cas redhat less than 7
+  template: src=../templates/module.conf.j2 dest={{cas_config_path_22}}
+  when: (ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS') and ansible_lsb.major_release|int < 7
+- name: create cas cache directory
+  command: mkdir -p "{{cas_cache_path}}"
+- name: change cache dir ownership
+  command: "chown www-data: {{cas_cache_path}}"
+  when: (ansible_distribution != 'RedHat' and ansible_distribution != 'CentOS')
+- name: change cache dir ownership
+  command: "chown apache: {{cas_cache_path}}"
+  when: (ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS')
+- name: set SELinux permissions on cache directory
+  command: semanage fcontext -a -t httpd_cache_t "{{cas_cache_path}}"
+  when: (ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS')
+- name: Restore selinux information
+  command: restorecon -R -v "{{cas_cache_path}}"
+  when: (ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS')
+- name: restart apache
+  service:
+    name: "{{ apache_daemon }}"
+    state: restarted

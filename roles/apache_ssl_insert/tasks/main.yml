@@ -1,0 +1,14 @@
+- name: Write galaxy.site file 
+  template: src=../templates/galaxy.site.j2 dest="{{galaxy_site_config_pth}}"
+- name: Write Initial CAS whitelist 
+  template: src=../templates/auth_cas.whitelist.j2 dest="{{auth_cas_whitelist_pth}}"
+- name: Include galaxy site to SSL section of the apache config
+  lineinfile: dest="{{config_dir}}ssl.conf" insertbefore="</VirtualHost>" line="Include {{galaxy_site_config_pth_relative}}" state=present
+- name: Replace SSL Cert
+  replace: dest="{{config_dir}}ssl.conf" regexp='SSLCertificateFile /etc/pki/tls/certs/localhost.crt' replace="SSLCertificateFile {{ssl_certs_cert_path}}"
+- name: Replace SSL Key
+  replace: dest="{{config_dir}}ssl.conf" regexp='SSLCertificateKeyFile /etc/pki/tls/private/localhost.key' replace="SSLCertificateKeyFile {{ssl_certs_privkey_path}}" 
+- name: restart apache
+  service:
+    name: "{{ apache_daemon }}"
+    state: restarted

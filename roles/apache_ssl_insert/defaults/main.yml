@@ -1,0 +1,10 @@
+config_dir: "/etc/httpd/conf.d/"
+config_dir_relative: "conf.d/"
+
+galaxy_site_config: "galaxy.site"
+cas_whitelist_config: "auth_cas.whitelist"
+
+galaxy_site_config_pth: "{{config_dir}}{{galaxy_site_config}}"
+auth_cas_whitelist_pth: "{{config_dir}}{{cas_whitelist_config}}"
+galaxy_site_config_pth_relative: "{{config_dir_relative}}{{galaxy_site_config}}"
+auth_cas_whitelist_pth_relative: "{{config_dir_relative}}{{cas_whitelist_config}}"

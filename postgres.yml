@@ -1,0 +1,10 @@
+---
+- hosts: Galaxy
+  remote_user: root
+  vars_files:
+    - ./vars/params.yml
+  roles:
+    - galaxyprojectdotorg.postgresql
+    - role: natefoo.postgresql_objects
+      sudo: yes
+      sudo_user: postgres

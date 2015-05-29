@@ -1,0 +1,4 @@
+- include: prep_server.yml
+- include: apache_setup.yml
+- include: postgres.yml
+- include: galaxy.yml

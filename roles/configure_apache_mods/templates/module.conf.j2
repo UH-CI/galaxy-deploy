@@ -1,0 +1,5 @@
+LoadModule auth_cas_module modules/mod_auth_cas.so
+
+{% for key, value in CAS_PARAMS.iteritems() %}
+{{key}} {{value}}
+{% endfor %}

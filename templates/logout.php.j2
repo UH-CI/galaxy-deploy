@@ -1,0 +1,23 @@
+<?php
+$cas_cookie = "";
+if(isset($_COOKIE["MOD_AUTH_CAS_S"])) {
+  $cas_cookie = "{{cas_cache_path}}" . $_COOKIE["MOD_AUTH_CAS_S"]; 
+} elseif(isset($_COOKIE["MOD_AUTH_CAS"])) {
+  $cas_cookie = "{{cas_cache_path}}" . $_COOKIE["MOD_AUTH_CAS"]; 
+} else {
+  header("Location: {{CAS_SSO_LOGOUT}}");
+  die();
+}
+
+$cas_cookie = realpath($cas_cookie);
+
+if (strpos($cas_cookie, "{{cas_cache_path}}" ) !== 0 || strpos($cas_cookie, "{{cas_cache_path}}") === false){
+ die('Invalid Path'); 
+} elseif( file_exists($cas_cookie) ) {
+  unlink($cas_cookie);
+}
+
+setcookie($cas_cookie, 1 , "/");
+header("Location: {{CAS_SSO_LOGOUT}}");
+die();
+?>

@@ -1,0 +1,26 @@
+#https://authn.hawaii.edu
+CAS_URL: "https://cas-test.its.hawaii.edu"
+
+CAS_SSO_LOGOUT: "{{CAS_URL}}/cas/logout"
+CAS_LOGOUT: "/static/logout.php"
+logout_page_location: "{{galaxy_server_dir}}/static/logout.php"
+
+CAS_PROXY_AS: "https://{{inventory_hostname}}"
+
+cas_cache_path: "/var/cache/httpd/cas/"
+
+galaxy_user: "galaxy"
+galaxy_user_uid: "999"
+galaxy_home: "/var/{{galaxy_user}}"
+
+
+postgresql_objects_users:
+  - name: "{{galaxy_user}}"
+    password: null
+
+postgresql_objects_databases:
+  - name: "{{galaxy_user}}"
+    owner: "{{galaxy_user}}"
+
+postgresql_pg_hba_conf:
+  - "local all {{galaxy_user}} peer"

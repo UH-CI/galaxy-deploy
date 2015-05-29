@@ -1,0 +1,31 @@
+RewriteEngine on
+RewriteRule ^/static/style/(.*) {{galaxy_server_dir}}/static/june_2007_style/blue/$1 [L]
+RewriteRule ^/static/scripts/(.*)  {{galaxy_server_dir}}/static/scripts/packed/$1 [L]
+RewriteRule ^/static/(.*)  {{galaxy_server_dir}}/static/$1 [L]
+RewriteRule ^/favicon.ico  {{galaxy_server_dir}}/static/favicon.ico [L]
+RewriteRule ^/robots.txt  {{galaxy_server_dir}}/static/robots.txt [L]
+
+<Location / >
+	  AuthType CAS
+	  AuthName Galaxy
+	  Include {{auth_cas_whitelist_pth_relative}}
+	  CASAuthNHeader REMOTE_USER
+	  SetOutputFilter DEFLATE
+	  SetEnvIfNoCase Request_URI \\.(?:gif|jpe?g|png)$ no-gzip dont-vary
+	  SetEnvIfNoCase Request_URI \\.(?:t?gz|zip|bz2)$ no-gzip dont-vary
+	  SetEnvIfNoCase Request_URI /history/export_archive no-gzip dont-vary
+	  RequestHeader set X-URL-SCHEME https
+	  XSendFile on
+	  XSendFilePath /
+</Location>
+
+ProxyVia On
+ProxyPassInterpolateEnv On
+
+<Proxy *>
+       Order allow,deny
+       Allow from all
+</Proxy>
+
+ProxyPass / http://localhost:8080/
+ProxyPassReverse / http://localhost:8080/

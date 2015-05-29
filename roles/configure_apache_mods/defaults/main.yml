@@ -1,0 +1,23 @@
+cas_git_path: "/tmp/mod_auth_cas"
+
+# modified to support apache 2.4
+cas_repo: "https://github.com/dkdubs/mod_auth_cas.git"
+cas_cache_path: "/var/cache/httpd/cas/"
+
+#Apache 2.4
+cas_config_path_24: "/etc/httpd/conf.modules.d/auth_cas.conf"
+#Apache 2.2
+cas_config_path_22: "/etc/httpd/conf.d/auth_cas.conf"
+
+CAS_PARAMS:
+  CASVersion: 2
+  CASCookiePath: "{{cas_cache_path}}"
+  CASLoginURL: "{{CAS_URL}}/cas/login"
+  CASValidateURL: "{{CAS_URL}}/cas/serviceValidate"
+  CASRootProxiedAs: "{{CAS_PROXY_AS}}"
+  CASTimeout: "7200"
+  CASIdleTimeout: "3600"
+
+
+
+#https://authn.hawaii.edu/

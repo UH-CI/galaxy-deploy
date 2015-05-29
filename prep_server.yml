@@ -1,0 +1,30 @@
+---
+- hosts: Galaxy
+  remote_user: root
+  pre_tasks:
+    - name: Install required/useful packges
+      yum: name={{ item }} state=present
+      with_items:
+        - git
+        - python-psycopg2
+        - libselinux-python
+        - policycoreutils-python
+        - emacs
+        - redhat-lsb
+        - nfs-utils
+        - nfs-utils-lib
+  roles:
+    - kun432.build-essential
+    - magnus919.epel
+  post_tasks:
+    - name: Install required/useful packges that may come from epel
+      yum: name={{ item }} state=present
+      with_items:
+        - python-virtualenv
+        - openssl-devel
+        - libcurl-devel
+        - apr-devel
+        - apr-util
+        - automake
+        - pcre-devel
+

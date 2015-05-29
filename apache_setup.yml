@@ -1,0 +1,39 @@
+- hosts: Galaxy
+  remote_user: root
+  vars_files:
+    - ./vars/apache.yml
+    - ./vars/params.yml
+    - ./vars/galaxy.yml
+  roles:
+    - geerlingguy.apache
+    - jdauphant.ssl-certs
+    - configure_apache_mods
+    - apache_ssl_insert
+  post_tasks:
+    - name: open port 443 (https) in the system firewall
+      firewalld: service=https permanent=true state=enabled immediate=yes
+      when: (ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS') and ansible_lsb.major_release|int >= 7
+    - name: Check if port 443 is allowed
+      shell: iptables -L | grep -q "Allow https"
+      register: check_allow_https
+      ignore_errors: yes
+      changed_when: no
+      always_run: yes
+      when: (ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS') and ansible_lsb.major_release|int < 7
+    - name: Allow port 443
+      command: iptables -I INPUT 1 -p tcp -m tcp --dport 443 -m comment --comment "Allow https" -j ACCEPT
+      when:  ((ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS') and ansible_lsb.major_release|int < 7) and check_allow_https.rc != 0
+    - name: save iptables
+      command: service iptables save
+      when: (ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS') and ansible_lsb.major_release|int < 7
+    - name: Install php
+      yum: name={{ item }} state=present
+      with_items:
+        - php
+        - php-cli
+        - php-devel
+      ignore_errors: yes
+    - name: restart apache
+      service:
+        name: "{{ apache_daemon }}"
+        state: restarted

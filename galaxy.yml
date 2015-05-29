@@ -1,0 +1,40 @@
+- hosts: Galaxy
+  remote_user: root
+  vars_files:
+    - ./vars/galaxy.yml
+    - ./vars/params.yml
+  pre_tasks:
+    - name: create galaxy user
+      user: name=galaxy state=present system=yes home="{{galaxy_home}}" uid="{{galaxy_user_uid}}" shell=/bin/bash
+    - name: Install package with semanage command
+      yum: name="policycoreutils-python" state=present
+    - name: Allow httpd to network connect
+      command: /usr/sbin/setsebool -P httpd_can_network_connect 1
+      when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
+    - name: Label galaxy-dist file directory for httpd usage
+      command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_home}}"
+      when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
+    - name: Restore selinux information
+      command: restorecon -R -v "{{galaxy_home}}"
+      when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
+    - name: Change galaxy home to allow apache group RH
+      file: path="{{galaxy_home}}" owner=galaxy group=apache mode=0750
+      when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
+    - name: Change galaxy home to allow apache group Other
+      file: path="{{galaxy_home}}" owner=galaxy group=www-data mode=0750
+      when: ansible_distribution != 'RedHat' and ansible_distribution != 'CentOS'
+  roles:
+    - role: galaxyprojectdotorg.galaxy
+      sudo: yes
+      sudo_user: "{{galaxy_user}}"
+  post_tasks:
+    - name: configure contrib script for where galaxy is located
+      replace: dest="{{galaxy_server_dir}}/contrib/galaxy.fedora-init" regexp="/path/to/galaxy-dist" replace="{{galaxy_server_dir}}"
+    - name: copy RH init script to init.d
+      command: cp "{{galaxy_server_dir}}/contrib/galaxy.fedora-init" /etc/init.d/galaxy
+    - name: make galaxy script executable
+      command: chmod 755 /etc/init.d/galaxy
+    - name: set galaxy to start on boot
+      command: chdir=/etc/init.d /sbin/chkconfig galaxy on
+    - name: install CAS logout page into static directory
+      template: src=./templates/logout.php.j2 dest="{{logout_page_location}}"

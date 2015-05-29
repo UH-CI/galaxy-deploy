@@ -1,0 +1,58 @@
+---
+# defaults file for galaxyprojectdotorg.galaxy
+galaxy_server_dir: "{{galaxy_home}}/galaxy-dist"
+
+# Controls which tasks are included, in case you need to perform different
+# options on different hosts or server directories.
+galaxy_manage_clone: yes
+galaxy_vcs: git
+# Download the Galaxy instead cloning, for throw away boxes (e.g. Docker)
+galaxy_manage_download: no
+galaxy_manage_static_setup: yes
+galaxy_manage_mutable_setup: yes
+galaxy_manage_database: yes
+galaxy_fetch_eggs: yes
+
+# This can be a tag (as shown here) but doing so will cause the revision check
+# task to always report "changed"
+galaxy_changeset_id: master
+galaxy_config_dir: "{{ galaxy_server_dir }}/config"
+
+SHARED_HOME: "/lus/scratch/galaxy/"
+
+galaxy_config:
+  "server:main":
+    host: 0.0.0.0
+  "app:main":
+    database_connection: "postgresql:///galaxy"
+    user_activation_on: "False"
+    use_remote_user: "True"
+    remote_user_maildomain: "hawaii.edu"
+    remote_user_logout_href: "{{CAS_LOGOUT}}"
+    admin_users: "SET ME!"
+    require_login: "True"
+    allow_user_creation: "False"
+    allow_user_dataset_purge: "True"
+    new_user_dataset_access_role_default_private: "True"
+    job_config_file: "{{galaxy_config_dir}}/job_conf.xml"
+    outputs_to_working_directory: "False"
+    cleanup_job: "always"
+    environment_setup_file: "{{galaxy_home}}/.bash_profile"
+    tool_config_file: "{{galaxy_config_dir}}/shed_tool_conf.xml,{{galaxy_config_dir}}/tool_conf.xml.sample"
+
+    tool_dependency_dir: "{{SHARED_HOME}}tool_dependency"
+#    datatypes_config_file: "datatypes_conf.xml"
+    apache_xsendfile: "True"
+    upstream_gzip: "True"
+    ftp_upload_dir: "{{SHARED_HOME}}users/"
+    ftp_upload_site: "SET ME!"
+    
+    new_file_path: "{{SHARED_HOME}}datastore/tmp"
+    file_path: "{{SHARED_HOME}}datastore/datasets"
+    openid_consumer_cache_path: "{{SHARED_HOME}}datastore/openid_consumer_cache"
+    citation_cache_data_dir: "{{SHARED_HOME}}datastore/citations/data"
+    citation_cache_lock_dir: "{{SHARED_HOME}}datastore/citations/locks"
+    whoosh_index_dir: "{{SHARED_HOME}}datastore/whoosh_cache"
+    template_cache_path: "{{SHARED_HOME}}datastore/template_cache"
+    object_store_cache_path: "{{SHARED_HOME}}datastore/object_store_cache"
+    job_working_directory: "{{SHARED_HOME}}datastore/jobs"

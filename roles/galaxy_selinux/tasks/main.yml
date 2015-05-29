@@ -1,0 +1,28 @@
+- name: Install package with semanage command
+  yum: name="policycoreutils-python" state=present
+
+- name: Allow httpd to network connect
+  command: /usr/sbin/setsebool -P httpd_can_network_connect 1
+
+- name: Label galaxy-dist file directory for httpd usage
+  command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_server_dir}}"
+- name: Restore selinux information
+  command: restorecon -R -v "{{galaxy_server_dir}}"
+
+- name: Label static directory for httpd usage
+  command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_server_dir}}/static"
+- name: Restore selinux information
+  command: restorecon -R -v "{{galaxy_server_dir}}/static"
+
+- name: Label static file directory for httpd usage
+  command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_server_dir}}/static/*"
+- name: Restore selinux information
+  command: restorecon -R -v "{{galaxy_server_dir}}/static/*"
+
+
+- name: Label database directory for httpd usage
+  command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_server_dir}}/database"
+- name: Restore selinux information
+  command: restorecon -R -v "{{galaxy_server_dir}}/database"
+
+
