@@ -1,5 +1,6 @@
 ---
 # defaults file for galaxyprojectdotorg.galaxy
+# MUST NOT END WITH A /
 galaxy_server_dir: "{{galaxy_home}}/galaxy-dist"
 
 # Controls which tasks are included, in case you need to perform different

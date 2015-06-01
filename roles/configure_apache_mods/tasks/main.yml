@@ -25,8 +25,10 @@
 - name: write configuration file for mod_auth_cas redhat less than 7
   template: src=../templates/module.conf.j2 dest={{cas_config_path_22}}
   when: (ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS') and ansible_lsb.major_release|int < 7
-- name: create cas cache directory
-  command: mkdir -p "{{cas_cache_path}}"
+- name: Verifies that {{cas_cache_path}} exists
+  file: path={{cas_cache_path}} state=directory
+#- name: create cas cache directory
+#  command: mkdir -p "{{cas_cache_path}}"
 - name: change cache dir ownership
   command: "chown www-data: {{cas_cache_path}}"
   when: (ansible_distribution != 'RedHat' and ansible_distribution != 'CentOS')

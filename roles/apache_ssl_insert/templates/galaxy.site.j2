@@ -6,6 +6,7 @@ RewriteRule ^/favicon.ico  {{galaxy_server_dir}}/static/favicon.ico [L]
 RewriteRule ^/robots.txt  {{galaxy_server_dir}}/static/robots.txt [L]
 
 <Location / >
+	  ErrorDocument 401 {{error_relative}}401.html
 	  AuthType CAS
 	  AuthName Galaxy
 	  Include {{auth_cas_whitelist_pth_relative}}
@@ -17,6 +18,11 @@ RewriteRule ^/robots.txt  {{galaxy_server_dir}}/static/robots.txt [L]
 	  RequestHeader set X-URL-SCHEME https
 	  XSendFile on
 	  XSendFilePath /
+</Location>
+
+<Location {{apache_error_dir}} >
+	  Order allow,deny
+       	  Allow from all
 </Location>
 
 ProxyVia On

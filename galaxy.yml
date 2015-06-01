@@ -12,7 +12,10 @@
       command: /usr/sbin/setsebool -P httpd_can_network_connect 1
       when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
     - name: Label galaxy-dist file directory for httpd usage
-      command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_home}}"
+      command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_server_selinux}}"
+      when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
+    - name: Label galaxy home for httpd usage
+      command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_home}"
       when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
     - name: Restore selinux information
       command: restorecon -R -v "{{galaxy_home}}"
@@ -38,3 +41,10 @@
       command: chdir=/etc/init.d /sbin/chkconfig galaxy on
     - name: install CAS logout page into static directory
       template: src=./templates/logout.php.j2 dest="{{logout_page_location}}"
+    - name: Verifies that {{apache_error_dir}} exists
+      file: path={{apache_error_dir}} state=directory
+    - name: install Custom 401 Page
+      template: src=./templates/401.html.j2 dest="{{401_page_location}}"
+    - name: Restore selinux information once more
+      command: restorecon -R -v "{{galaxy_home}}"
+      when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'

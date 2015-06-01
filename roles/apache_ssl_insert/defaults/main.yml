@@ -8,3 +8,6 @@ galaxy_site_config_pth: "{{config_dir}}{{galaxy_site_config}}"
 auth_cas_whitelist_pth: "{{config_dir}}{{cas_whitelist_config}}"
 galaxy_site_config_pth_relative: "{{config_dir_relative}}{{galaxy_site_config}}"
 auth_cas_whitelist_pth_relative: "{{config_dir_relative}}{{cas_whitelist_config}}"
+
+ssl_protocol: "all -SSLv2 -SSLv3"
+ssl_ciphers: "HIGH"

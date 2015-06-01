@@ -8,6 +8,14 @@
   replace: dest="{{config_dir}}ssl.conf" regexp='SSLCertificateFile /etc/pki/tls/certs/localhost.crt' replace="SSLCertificateFile {{ssl_certs_cert_path}}"
 - name: Replace SSL Key
   replace: dest="{{config_dir}}ssl.conf" regexp='SSLCertificateKeyFile /etc/pki/tls/private/localhost.key' replace="SSLCertificateKeyFile {{ssl_certs_privkey_path}}" 
+
+
+- name: Replace SSL Protocol
+  replace: dest="{{config_dir}}ssl.conf" regexp='#?SSLProtocol\s+.*' replace="SSLProtocol {{ssl_protocol}} " 
+- name: Replace SSL Protocol
+  replace: dest="{{config_dir}}ssl.conf" regexp='#?SSLCipherSuite\s+.*' replace="SSLCipherSuite {{ssl_ciphers}} " 
+
+
 - name: restart apache
   service:
     name: "{{ apache_daemon }}"

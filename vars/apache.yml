@@ -19,6 +19,10 @@ ssl_certs_generate_self_signed: true
 ssl_certs_key_size: "2048"
 ssl_certs_sign_algo: "-sha256"
 
+ssl_protocol: "all -SSLv2 -SSLv3"
+ssl_ciphers: "HIGH"
+
+
 #https://sslanalyzer.comodoca.com
 #SSLProtocol All -SSLv2 -SSLv3
 #https://weakdh.org/sysadmin.html

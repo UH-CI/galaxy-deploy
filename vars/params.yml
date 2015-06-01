@@ -11,8 +11,11 @@ cas_cache_path: "/var/cache/httpd/cas/"
 
 galaxy_user: "galaxy"
 galaxy_user_uid: "999"
-galaxy_home: "/var/{{galaxy_user}}"
+# should match where the galaxy server files for pulsar are located.  
+galaxy_home: "/home/{{galaxy_user}}"
 
+#https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security-Enhanced_Linux/sect-Security-Enhanced_Linux-SELinux_Contexts_Labeling_Files-Persistent_Changes_semanage_fcontext.html
+galaxy_server_selinux: "{{galaxy_server_dir}}(/.*)?"
 
 postgresql_objects_users:
   - name: "{{galaxy_user}}"
@@ -24,3 +27,12 @@ postgresql_objects_databases:
 
 postgresql_pg_hba_conf:
   - "local all {{galaxy_user}} peer"
+
+error_relative: "/static/error/"
+
+apache_error_dir: "{{galaxy_server_dir}}{{error_relative}}"
+
+401_page_location: "{{apache_error_dir}}/401.html"
+
+admin_name: "who"
+amin_email: "email address"
