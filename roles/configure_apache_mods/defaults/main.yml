@@ -6,8 +6,10 @@ cas_cache_path: "/var/cache/httpd/cas/"
 
 #Apache 2.4
 cas_config_path_24: "/etc/httpd/conf.modules.d/auth_cas.conf"
+uwsgi_config_path_24:'/etc/httpd/conf.modules.d/00_mod_proxy_uwsgi.conf'
 #Apache 2.2
 cas_config_path_22: "/etc/httpd/conf.d/auth_cas.conf"
+uwsgi_config_path_22: '/etc/httpd/conf.d/00_mod_proxy_uwsgi.conf'
 
 CAS_PARAMS:
   CASVersion: 2

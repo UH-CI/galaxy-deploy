@@ -15,7 +15,7 @@
       command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_server_selinux}}"
       when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
     - name: Label galaxy home for httpd usage
-      command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_home}"
+      command: semanage fcontext -a -t httpd_sys_content_t "{{galaxy_home}}"
       when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
     - name: Restore selinux information
       command: restorecon -R -v "{{galaxy_home}}"

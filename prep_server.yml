@@ -13,6 +13,7 @@
         - redhat-lsb
         - nfs-utils
         - nfs-utils-lib
+        - python-devel
   roles:
     - kun432.build-essential
     - magnus919.epel
@@ -27,4 +28,4 @@
         - apr-util
         - automake
         - pcre-devel
-
+        - python-devel

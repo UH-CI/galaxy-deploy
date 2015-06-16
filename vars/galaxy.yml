@@ -23,8 +23,46 @@ SHARED_HOME: "/lus/scratch/galaxy/"
 
 galaxy_config:
   "server:main":
-    host: 0.0.0.0
+    host: 127.0.0.1
+    use_threadpool: true
+    use: "egg:Paste#http"
+
+  "server:handler0":
+    host: 127.0.0.1
+    use: "egg:Paste#http"
+    port: 8090
+    use_threadpool: true
+    threadpool_workers: 5
+
+  "server:handler1":
+    host: 127.0.0.1
+    use: "egg:Paste#http"
+    port: 8091
+    use_threadpool: true
+    threadpool_workers: 5
+
+  "uwsgi":
+    processes: 4
+    stats: 127.0.0.1:9191
+    socket: 127.0.0.1:4001
+    http: 127.0.0.1:4002
+    pythonpath: lib
+    threads: 4
+    logto: {{galaxy_home}}/logs/uwsgi.log
+    pidfile: {{galaxy_home}}/pids/uwsgi.pid
+    master: True
+
   "app:main":
+    static_enabled:  False
+    debug: False
+    expose_dataset_path: False
+    normalize_remote_user_email: True
+    remote_user_secret:
+    id_secret: 
+    database_engine_option_server_side_cursors: True
+    cleanup_job: always
+    log_level: INFO
+    
     database_connection: "postgresql:///galaxy"
     user_activation_on: "False"
     use_remote_user: "True"
@@ -34,6 +72,7 @@ galaxy_config:
     require_login: "True"
     allow_user_creation: "False"
     allow_user_dataset_purge: "True"
+    enable_quotas: "True"
     new_user_dataset_access_role_default_private: "True"
     job_config_file: "{{galaxy_config_dir}}/job_conf.xml"
     outputs_to_working_directory: "False"
@@ -42,11 +81,10 @@ galaxy_config:
     tool_config_file: "{{galaxy_config_dir}}/shed_tool_conf.xml,{{galaxy_config_dir}}/tool_conf.xml.sample"
 
     tool_dependency_dir: "{{SHARED_HOME}}tool_dependency"
-#    datatypes_config_file: "datatypes_conf.xml"
     apache_xsendfile: "True"
     upstream_gzip: "True"
     ftp_upload_dir: "{{SHARED_HOME}}users/"
-    ftp_upload_site: "SET ME!"
+    ftp_upload_site:
     
     new_file_path: "{{SHARED_HOME}}datastore/tmp"
     file_path: "{{SHARED_HOME}}datastore/datasets"
@@ -57,3 +95,41 @@ galaxy_config:
     template_cache_path: "{{SHARED_HOME}}datastore/template_cache"
     object_store_cache_path: "{{SHARED_HOME}}datastore/object_store_cache"
     job_working_directory: "{{SHARED_HOME}}datastore/jobs"
+
+  loggers:
+    keys: root,main,handler0,handler1
+  handlers:
+    keys: file,console
+  formatters:
+    keys: generic
+  logger_root:
+    level: INFO
+    handlers: file
+
+  logger_main:
+    level: INFO
+    handlers: file
+    qualname: galaxy
+    propagate: 0
+  logger_handler0:
+    level: INFO
+    handlers: file
+    qualname: galaxy
+    propagate: 0
+  logger_handler1:
+    level: INFO
+    handlers: file
+    qualname: galaxy
+    propagate: 0
+  handler_console:
+    class: StreamHandler
+    args: (sys.stderr,)
+    level: INFO
+    formatter: generic
+  handler_file:
+    class: FileHandler
+    args: ('{{galaxy_home}}/logs/galaxy.log', 'a')
+    formatter: generic
+    level: INFO
+  formatter_generic:
+    format: %(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s
