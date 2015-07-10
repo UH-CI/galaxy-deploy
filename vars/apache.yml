@@ -28,6 +28,7 @@ ssl_ciphers: "HIGH"
 #https://weakdh.org/sysadmin.html
 #https://weakdh.org/
 
+
 apache_listen_port: 80
 apache_listen_port_ssl: 443
 apache_create_vhosts: false
@@ -42,3 +43,4 @@ apache_vhosts_filename: "vhosts.conf"
 #    documentroot: "/var/www/html"
 #    certificate_file: "{{ssl_certs_cert_path}}"
 #    certificate_key_file: "{{ssl_certs_privkey_path}}"
+

@@ -48,17 +48,17 @@ galaxy_config:
     http: 127.0.0.1:4002
     pythonpath: lib
     threads: 4
-    logto: {{galaxy_home}}/logs/uwsgi.log
-    pidfile: {{galaxy_home}}/pids/uwsgi.pid
+    logto: "{{galaxy_home}}/logs/uwsgi.log"
+    pidfile: "{{galaxy_home}}/pids/uwsgi.pid"
     master: True
-
+    
   "app:main":
     static_enabled:  False
     debug: False
     expose_dataset_path: False
     normalize_remote_user_email: True
-    remote_user_secret:
-    id_secret: 
+    remote_user_secret: 111
+    id_secret: 1112
     database_engine_option_server_side_cursors: True
     cleanup_job: always
     log_level: INFO
@@ -132,4 +132,4 @@ galaxy_config:
     formatter: generic
     level: INFO
   formatter_generic:
-    format: %(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s
+    format: "%(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s"

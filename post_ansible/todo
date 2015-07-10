@@ -1,0 +1,4 @@
+- install python into users home ./configure --prefix=/home/galaxy/
+- Set ~/bin into users path
+- make sure no alias over ride this
+- configure the galaxy.init to fit your install (pasterDeploy might need to be changed).

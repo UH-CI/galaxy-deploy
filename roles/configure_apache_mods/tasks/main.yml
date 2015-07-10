@@ -53,7 +53,7 @@
 - name: move uwsgi executable onto path
   command: mv /tmp/uwsgi_lts/uwsgi /usr/local/bin/uwsgi
 - name: make Apache mod_proxy_uwsgi
-  command: chdir = '/tmp/uwsgi_lts/apache2' apxs -i -c mod_proxy_uwsgi.c
+  command: chdir='/tmp/uwsgi_lts/apache2' apxs -i -c mod_proxy_uwsgi.c
 - name: write configuration file for mod_uwsgi_proxy redhat greater than or eq to 7
   template: src=../templates/00_mod_proxy_uwsgi.conf.j2  dest={{uwsgi_config_path_24}}
   when: (ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS') and ansible_lsb.major_release|int >= 7

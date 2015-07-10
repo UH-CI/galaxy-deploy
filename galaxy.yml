@@ -26,6 +26,50 @@
     - name: Change galaxy home to allow apache group Other
       file: path="{{galaxy_home}}" owner=galaxy group=www-data mode=0750
       when: ansible_distribution != 'RedHat' and ansible_distribution != 'CentOS'
+
+    - name: Update bash_profile for "{{galaxy_user}}"
+      lineinfile:
+        dest="{{galaxy_home}}/.bash_profile"
+        line="export PATH=${HOME}/bin:${PATH}"
+        regexp="export PATH=\${HOME}\/bin:\${PATH}"
+        owner=galaxy
+        state=present
+        insertafter=EOF
+        create=True
+    - name: download python2.x
+      get_url: dest='/tmp/python.tgz' url='https://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz'
+      sudo: yes
+      sudo_user: "{{galaxy_user}}"
+    - name: upack python2.x
+      command: chdir=/tmp tar xzvf python.tgz
+      sudo: yes
+      sudo_user: "{{galaxy_user}}"
+    - name: configure python2.x
+      command: chdir=/tmp/Python-2.7.10 ./configure --prefix="{{galaxy_home}}"
+      sudo: yes
+      sudo_user: "{{galaxy_user}}"
+    - name: compile python2.x
+      command: chdir=/tmp/Python-2.7.10 make
+      sudo: yes
+      sudo_user: "{{galaxy_user}}"
+    - name: install python2.x
+      command: chdir=/tmp/Python-2.7.10 make install
+      sudo: yes
+      sudo_user: "{{galaxy_user}}"
+
+    - name: getpip
+      get_url: dest='/tmp/get-pip.py' url='https://bootstrap.pypa.io/get-pip.py'
+      sudo: yes
+      sudo_user: "{{galaxy_user}}"
+    - name: install pip
+      command: chdir="/tmp/" python get-pip.py
+      sudo: yes
+      sudo_user: "{{galaxy_user}}"
+    - name: install virtualenv
+      command: pip install virtualenv
+      sudo: yes
+      sudo_user: "{{galaxy_user}}"
+
   roles:
     - role: galaxyprojectdotorg.galaxy
       sudo: yes
@@ -44,7 +88,7 @@
     - name: Verifies that {{apache_error_dir}} exists
       file: path={{apache_error_dir}} state=directory
     - name: install Custom 401 Page
-      template: src=./templates/401.html.j2 dest="{{401_page_location}}"
+      template: src=./templates/401.html.j2 dest="{{page_location_401}}"
     - name: Restore selinux information once more
       command: restorecon -R -v "{{galaxy_home}}"
       when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'

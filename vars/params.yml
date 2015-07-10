@@ -32,7 +32,7 @@ error_relative: "/static/error/"
 
 apache_error_dir: "{{galaxy_server_dir}}{{error_relative}}"
 
-401_page_location: "{{apache_error_dir}}/401.html"
+page_location_401: "{{apache_error_dir}}/401.html"
 
 admin_name: "who"
-amin_email: "email address"
+admin_email: "email@address"

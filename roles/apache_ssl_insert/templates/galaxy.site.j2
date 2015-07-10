@@ -16,7 +16,7 @@ RewriteRule ^/robots.txt  {{galaxy_server_dir}}/static/robots.txt [L]
 	  SetEnvIfNoCase Request_URI \\.(?:t?gz|zip|bz2)$ no-gzip dont-vary
 	  SetEnvIfNoCase Request_URI /history/export_archive no-gzip dont-vary
 	  RequestHeader set X-URL-SCHEME https
-	  RequestHeader set GX_SECRET {{galaxy_config.app:main.remote_user_secret}}
+	  RequestHeader set GX_SECRET {{galaxy_config['app:main']['remote_user_secret']}}
 	  XSendFile on
 	  XSendFilePath /
 </Location>

@@ -4,7 +4,7 @@
   vars_files:
     - ./vars/params.yml
   roles:
-#    - galaxyprojectdotorg.postgresql
+    - galaxyprojectdotorg.postgresql
     - role: natefoo.postgresql_objects
       sudo: yes
       sudo_user: postgres

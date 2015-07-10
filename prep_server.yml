@@ -14,6 +14,18 @@
         - nfs-utils
         - nfs-utils-lib
         - python-devel
+
+        - zlib-dev 
+        - openssl-devel 
+        - sqlite-devel 
+        - bzip2-devel
+        - ncurses-devel
+        - readline-devel
+        - gdbm-devel
+        - tk-devel
+        - tcl-devel
+        - tix-devel
+
   roles:
     - kun432.build-essential
     - magnus919.epel
@@ -29,3 +41,14 @@
         - automake
         - pcre-devel
         - python-devel
+
+        - zlib-dev 
+        - openssl-devel 
+        - sqlite-devel 
+        - bzip2-devel
+        - ncurses-devel
+        - readline-devel
+        - gdbm-devel
+        - tk-devel
+        - tcl-devel
+        - tix-devel

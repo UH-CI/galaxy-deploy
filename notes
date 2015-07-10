@@ -1,0 +1,1 @@
+need to set the sudo_flags in the ansible.cfg file (/etc/ansbile/ansible.cfg) to use -i.. i.e., sudo_flags = -i
