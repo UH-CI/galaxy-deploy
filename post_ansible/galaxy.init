@@ -14,12 +14,14 @@ SERVICE_NAME="galaxy"
 RUN_AS="galaxy"
 RUN_IN="/home/galaxy/galaxy-dist"
 RUN_IN="/home/galaxy/galaxy-dist"
+LOG_PATH="/home/galaxy/logs/uwsgi.log"
+PID_PATH="/home/galaxy/pids/uwsgi.pid"
 #--- main actions
 
 start() {
 	echo "Starting $SERVICE_NAME... "
 	cmd="cd $RUN_IN && GALAXY_RUN_ALL=1 sh run.sh --daemon "
-	cmd2="cd $RUN_IN && PYTHONPATH=eggs/PasteDeploy-1.5.0-py2.7.egg uwsgi --ini-paste config/galaxy.ini -d /home/galaxy/logs/uwsgi.log"
+	cmd2="cd $RUN_IN && PYTHONPATH=eggs/PasteDeploy-1.5.0-py2.7.egg uwsgi --ini-paste config/galaxy.ini -d ${LOG_PATH}"
 	case "$(id -un)" in
 		$RUN_AS)
 			eval "$cmd"
@@ -40,7 +42,7 @@ stop() {
 	echo -n "Stopping $SERVICE_NAME... "
 	
 	cmd="cd $RUN_IN && GALAXY_RUN_ALL=1 sh run.sh --stop-daemon"
-	cmd2="cd $RUN_IN && uwsgi --stop /home/galaxy/pids/uwsgi.pid"
+	cmd2="cd $RUN_IN && uwsgi --stop ${PID_PATH}"
 
 	case "$(id -un)" in
 		$RUN_AS)

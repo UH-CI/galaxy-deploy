@@ -1,0 +1,67 @@
+# PRE-ANSIBlE
+need to set the sudo_flags in the ansible.cfg file (/etc/ansbile/ansible.cfg) to use -i.. i.e., sudo_flags = -i
+
+# POST-ANSIBLE
+-The galaxy role seems to use dev, even if we specify master.  We need to change this before starting with galaxy
+go into the galaxy install directory and run 'git checkout -b master origin/master'
+
+https://wiki.galaxyproject.org/Admin/GetGalaxy
+https://wiki.galaxyproject.org/Develop/SourceCode
+
+This installs a vert basic setup for galaxy.  Parts that are missing include:
+ 
+- remote file system (nfs, mount , fstab, automount, etc)
+
+- setup torque
+yum install:
+torque-devel
+torque-client
+torque-libs
+torque-mom
+torque-pam.i686
+torque-pam
+torque-scheduler
+torque-server
+torque
+munge
+---
+create-munge-key
+chkconfig pbs_mom on
+chkconfig pbs_server on
+chkconfig pbs_sched on
+chkconfig trqauthd on
+chkconfig munge on
+
+check /etc/hosts for hostname (full hostname)
+
+modify the /etc/torque/server_name to something.. like galaxy.. or hostname
+modify /etc/torque/mom/config to the hostname
+
+start all the pbs_*, trqauthd and munge
+
+run
+
+qmgr -c "create queue test queue_type=execution" 
+qmgr -c "set queue test enabled=true"
+qmgr -c "set queue test started=true"
+qmgr -c "set server scheduling=True" 
+qmgr -c "set system default_queue = test"
+qmgr -c "set queue test resources_default.walltime = 99:99:99
+
+restart all pbs_* and trqauthd
+
+setup a passwordless key for galaxy user
+
+ssh-keygen -t rsa
+
+cp id_rsa.pub authorized_keys
+chmod 600 authorized_keys
+
+http://docs.adaptivecomputing.com/mwm/Content/pbsdefault.html
+
+wget http://eggs.g2.bx.psu.edu/pbs_python/pbs_python-4.4.0.tar.gz
+tar xzvf pbs_python-4.4.0.tar.gz
+cd pbs_python-4.4.0
+./configure --prefix=/home/galaxy
+python setup.py build 
+python setup.py install

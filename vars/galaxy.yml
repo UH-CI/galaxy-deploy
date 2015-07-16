@@ -7,6 +7,11 @@ galaxy_server_dir: "{{galaxy_home}}/galaxy-dist"
 # options on different hosts or server directories.
 galaxy_manage_clone: yes
 galaxy_vcs: git
+
+# changed to our fork of the galaxy repo.. just in case we do customizations
+#galaxy_git_repo: https://github.com/galaxyproject/galaxy.git
+galaxy_git_repo: https://github.com/UH-CI/galaxy
+
 # Download the Galaxy instead cloning, for throw away boxes (e.g. Docker)
 galaxy_manage_download: no
 galaxy_manage_static_setup: yes
@@ -16,10 +21,14 @@ galaxy_fetch_eggs: yes
 
 # This can be a tag (as shown here) but doing so will cause the revision check
 # task to always report "changed"
-galaxy_changeset_id: master
+galaxy_changeset_id: "master"
 galaxy_config_dir: "{{ galaxy_server_dir }}/config"
 
 SHARED_HOME: "/lus/scratch/galaxy/"
+
+galaxy_logdir: "{{galaxy_home}}/logs/"
+galaxy_piddir: "{{galaxy_home}}/pids/"
+
 
 galaxy_config:
   "server:main":
@@ -48,8 +57,8 @@ galaxy_config:
     http: 127.0.0.1:4002
     pythonpath: lib
     threads: 4
-    logto: "{{galaxy_home}}/logs/uwsgi.log"
-    pidfile: "{{galaxy_home}}/pids/uwsgi.pid"
+    logto: "{{galaxy_logdir}}/uwsgi.log"
+    pidfile: "{{galaxy_piddir}}/uwsgi.pid"
     master: True
     
   "app:main":
@@ -57,8 +66,10 @@ galaxy_config:
     debug: False
     expose_dataset_path: False
     normalize_remote_user_email: True
-    remote_user_secret: 111
-    id_secret: 1112
+# CHANGE/SET ME BEFORE DEPLOY
+    remote_user_secret: 111 
+# CHANGE/SET ME BEFORE DEPLOY
+    id_secret: 111
     database_engine_option_server_side_cursors: True
     cleanup_job: always
     log_level: INFO

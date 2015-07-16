@@ -26,7 +26,10 @@
     - name: Change galaxy home to allow apache group Other
       file: path="{{galaxy_home}}" owner=galaxy group=www-data mode=0750
       when: ansible_distribution != 'RedHat' and ansible_distribution != 'CentOS'
-
+    - name: Creates galaxy pid directory
+      file: path="{{galaxy_piddir}}" state=directory group=galaxy owner=galaxy
+    - name: Creates galaxy log directory
+      file: path="{{galaxy_logdir}}" state=directory group=galaxy owner=galaxy
     - name: Update bash_profile for "{{galaxy_user}}"
       lineinfile:
         dest="{{galaxy_home}}/.bash_profile"

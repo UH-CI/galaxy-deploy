@@ -14,8 +14,7 @@
         - nfs-utils
         - nfs-utils-lib
         - python-devel
-
-        - zlib-dev 
+        - zlib-devel 
         - openssl-devel 
         - sqlite-devel 
         - bzip2-devel
@@ -25,6 +24,9 @@
         - tk-devel
         - tcl-devel
         - tix-devel
+        - tmpwatch
+        - yum-cron
+        - autofs
 
   roles:
     - kun432.build-essential
@@ -41,8 +43,7 @@
         - automake
         - pcre-devel
         - python-devel
-
-        - zlib-dev 
+        - zlib-devel
         - openssl-devel 
         - sqlite-devel 
         - bzip2-devel
@@ -52,3 +53,6 @@
         - tk-devel
         - tcl-devel
         - tix-devel
+        - tmpwatch
+        - yum-cron
+        - autofs
