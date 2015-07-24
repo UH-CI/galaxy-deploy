@@ -17,7 +17,7 @@ if (strpos($cas_cookie, "{{cas_cache_path}}" ) !== 0 || strpos($cas_cookie, "{{c
   unlink($cas_cookie);
 }
 
-setcookie($cas_cookie, 1 , "/");
+setcookie($cas_cookie, "", 1 , "/");
 header("Location: {{CAS_SSO_LOGOUT}}");
 die();
 ?>
